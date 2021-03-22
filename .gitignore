@@ -1,0 +1,9 @@
+
+build/
+.vscode/
+
+*.o
+*.out
+*.n64
+
+!sound/*.o

@@ -11,9 +11,12 @@
 #include "sprite.hpp"
 #include "staticobj.hpp"
 #include "util.hpp"
+#include "math.hpp"
+#include "game.hpp"
 
 #include "../scene/object_info.h"
-#include "../models/ovl/sprites/sprite_logo.h"
+#include "../models/ovl/sprites/sp_logo1.h"
+#include "../models/ovl/sprites/sp_logo2.h"
 
 // -------------------------------------------------------------------------- //
 
@@ -110,12 +113,16 @@ void TLogoScene::init()
     );
 
     mShowTimer = new TTimer;
+    mFadeTimer = new TTimer;
 
     // scene start timer
-    mShowTimer->start(1);
+    mShowTimer->start(2);
 
     // move logo off-screen
     mLogoX = 512;
+
+    mLogoSpr = new TSprite;
+    mLogoNinSpr = new TSprite;
 }
 
 // -------------------------------------------------------------------------- //
@@ -125,6 +132,8 @@ void TLogoScene::update()
     // wait two seconds to boot
     if (mShowTimer != nullptr) {
         runBootTimer();
+    } else {
+        runFadeLogo1();
     }
 }
 
@@ -137,14 +146,28 @@ void TLogoScene::draw()
 
 void TLogoScene::draw2D()
 {
+    switch(mLogoState)
+    {
+        case 0:
+        case 1:
+            mLogoSpr->load(logo1_sprite);
+            mLogoSpr->setPosition(TVec2S{mLogoX, mLogoY});
+            mLogoSpr->setScale(TVec2F{1.0f, 1.0f});
+            mLogoSpr->setColor({255,255,255,static_cast<u8>(mAlpha)});
+            mLogoSpr->setAttributes(SP_FRACPOS | SP_TRANSPARENT);
+            mLogoSpr->draw();
+            break;
+        case 2:
+        case 3:
+            mLogoSpr->load(logo2_sprite);
+            mLogoSpr->setPosition(TVec2S{mLogoX, mLogoY});
+            mLogoSpr->setScale(TVec2F{1.0f, 1.0f});
+            mLogoSpr->setColor({255,255,255,static_cast<u8>(mAlpha)});
+            mLogoSpr->setAttributes(SP_FRACPOS | SP_TRANSPARENT);
+            mLogoSpr->draw();
+    }
 
-    TSprite logo = TSprite();
-    logo.load(logo_sprite);
-    logo.setPosition(TVec2S{mLogoX, mLogoY});
-    logo.setScale(TVec2F{1.0f, 1.0f});
-    logo.setColor({255,255,255,mAlpha});
-    logo.setAttributes(SP_FRACPOS | SP_TRANSPARENT);
-    logo.draw();
+
 }
 
 TScene * TLogoScene::exit()
@@ -152,6 +175,9 @@ TScene * TLogoScene::exit()
     // turn off screen
     //nuGfxDisplayOff();
 
+    delete mLogoSpr;
+    delete mLogoNinSpr;
+    delete mFadeTimer;
     return new TLogoScene { "logo", mDynList };
 
 }
@@ -163,7 +189,8 @@ void TLogoScene::runBootTimer()
     if (mShowTimer->update()) {
         delete mShowTimer;
         mShowTimer = nullptr;
-        mLogoX = 40;        // move logo on screen
+        mLogoX = 0;        // move logo on screen
+        mFadeTimer->start(8);
         //TAudio::playSound(ESfxType::SFX_CAW);
     }
 }
@@ -186,3 +213,34 @@ void TLogoScene::runLogoTimer()
 }
 
 // -------------------------------------------------------------------------- //
+
+void TLogoScene::runFadeLogo1()
+{
+    const float delayList[5] = {5, 5, 8, 8, 99999};
+    auto game = TGame::getInstance();
+
+    if (!mFadeTimer->update()) {
+        switch(mLogoState)
+        {
+            case 0:
+                mAlpha = TMath<s16>::clamp((mAlpha + 2), 0, 255);
+                break;
+            case 1:
+                game->setClearColor(255,255,255,1);
+                mAlpha = TMath<s16>::clamp((mAlpha - 2), 0, 255);
+                break;
+            case 2:
+                mAlpha = TMath<s16>::clamp((mAlpha + 2), 0, 255);
+                break;
+            case 3:
+                mAlpha = TMath<s16>::clamp((mAlpha - 2), 0, 255);
+                break;
+            case 4:
+                mStatus = ESceneState::EXITING;
+                break;
+        }
+    } else {
+        ++mLogoState;
+        mFadeTimer->start(delayList[mLogoState]);
+    }
+}

@@ -6,6 +6,7 @@
 #include "camera.hpp"
 #include "collision.hpp"
 #include "dynlist.hpp"
+#include "sprite.hpp"
 #include "pad.hpp"
 #include "scenedata.h"
 #include "staticobj.hpp"
@@ -75,12 +76,17 @@ class TLogoScene final
 
     void runBootTimer();
     void runLogoTimer();
+    void runFadeLogo1();
 
+    TSprite * mLogoSpr{nullptr};
+    TSprite * mLogoNinSpr{nullptr};
     TTimer * mTimer{nullptr};
     TTimer * mShowTimer{nullptr};
-    s32 mLogoX{40};
-    s32 mLogoY{20};
-    u8 mAlpha{255};
+    TTimer * mFadeTimer{nullptr};
+    s32 mLogoX{0};
+    s32 mLogoY{0};
+    s16 mAlpha{0};
+    s8 mLogoState{0};
 
 };
 // -------------------------------------------------------------------------- //

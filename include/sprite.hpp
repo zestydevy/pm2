@@ -14,6 +14,11 @@ struct TColor
     u8 g;
     u8 b;
     u8 a;
+
+    static inline u16 pack(u8 r, u8 g, u8 b, u8 a)
+    {
+        return static_cast<u16>(((((r)<<8) & 0xf800) | (((g)<<3) & 0x7c0) | (((b)>>2) & 0x3e) | ((a) & 0x1)));
+    }
 };
 
 extern Gfx rspinit_dl[];

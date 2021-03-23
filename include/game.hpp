@@ -32,6 +32,8 @@ class TGame
     void initRcpSegment();
     void initZBuffer();
     void initFrameBuffer();
+    void inline setClearColor(u8 r, u8 g, u8 b, u8 a) 
+    {mClearColor = (TColor::pack(r,g,b,a)) << 16 | (TColor::pack(r,g,b,a));}
 
     void setCurrentScene(TScene * scene) { mScene = scene; }
     TScene * getCurrentScene() {return mScene; }
@@ -41,6 +43,7 @@ class TGame
     private:
 
     float mTheta{0.0f};
+    u32 mClearColor{static_cast<u32>((TColor::pack(0,0,0,1)) << 16 | (TColor::pack(0,0,0,1)))};
 
     TBlockHeap * mBlockHeap { nullptr };
     TScene * mScene { nullptr };

@@ -160,15 +160,13 @@ void TGame::update()
         (s32)(mDynList->fetchCmdIndex()) * sizeof (Gfx),
 	    NU_GFX_UCODE_F3DEX, NU_SC_NOSWAPBUFFER);
 
-    /*
-    TVec3F pPos = getCurrentScene()->getPlayer()->getPosition();
 
     char conbuff[64];
     nuDebConTextColor(0, NU_DEB_CON_TEXT_RED);
     nuDebConTextPos(0,3,3);
-    sprintf(conbuff,"%.2f, %.2f, %.2f", pPos.x(), pPos.y(), pPos.z());
+    sprintf(conbuff,"%x", THeap::getCurrentHeap()->getUsedSize());
     nuDebConCPuts(0, conbuff);
-    */
+    
     nuDebConDisp(NU_SC_SWAPBUFFER);
 
     mDynList->flip();
@@ -315,8 +313,7 @@ void TGame::initFrameBuffer()
 {
     gDPSetColorImage(mDynList->pushDL(), G_IM_FMT_RGBA, G_IM_SIZ_16b, kResWidth,
         osVirtualToPhysical(nuGfxCfb_ptr));
-    gDPSetFillColor(mDynList->pushDL(), (GPACK_RGBA5551(0, 0, 0, 1) << 16 | 
-        GPACK_RGBA5551(0, 0, 0, 1)));
+    gDPSetFillColor(mDynList->pushDL(), mClearColor);
     gDPFillRectangle(mDynList->pushDL(), 0, 0, kResWidth-1, kResHeight-1);
 }
 

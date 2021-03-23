@@ -88,13 +88,15 @@ SECTIONS
 
    BEGIN_SEG(logo_ovl, _codeSegmentBssEnd)
    {
-      build/obj/sprite_logo.o(.data*);
+      build/obj/sp_logo1.o(.data*);
+      build/obj/sp_logo2.o(.data*);
       . = ALIGN(0x10);
    }
    END_SEG(logo_ovl)
    BEGIN_NOLOAD(logo_ovl)
    {
-      build/obj/sprite_logo.o(.bss*);
+      build/obj/sp_logo1.o(.bss*);
+      build/obj/sp_logo2.o(.bss*);
    }
    END_NOLOAD(logo_ovl)
    

@@ -21,6 +21,8 @@ extern char _menu_ovlSegmentStart[];
 
 extern u8 _logo_ovlSegmentRomStart[];
 extern u8 _logo_ovlSegmentRomEnd[];
+extern u8 _title_ovlSegmentRomStart[];
+extern u8 _title_ovlSegmentRomEnd[];
 extern u8 _world_ovlSegmentRomStart[];
 extern u8 _world_ovlSegmentRomEnd[];
 extern u8 _bird_ovlSegmentRomStart[];

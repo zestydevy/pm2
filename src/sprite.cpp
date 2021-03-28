@@ -16,6 +16,8 @@ void TSprite::load(
 ) {
     mSpriteData.width = sprite.width;
     mSpriteData.height = sprite.height;
+    mSpriteData.expx = sprite.expx;
+    mSpriteData.expy = sprite.expy;
     mSpriteData.attr = sprite.attr;
     mSpriteData.zdepth = sprite.zdepth;
     mSpriteData.startTLUT = sprite.startTLUT;

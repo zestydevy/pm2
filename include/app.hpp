@@ -9,8 +9,8 @@
 
 size_t constexpr kStackSize = 0x2000;
 size_t constexpr kMaxPiMsg = 8;
-size_t constexpr kHeapLocation = 0x8020F800;
-size_t constexpr kHeapSize     = 1024*1024;      // 1.0 MB
+size_t constexpr kHeapLocation = 0x8028F800;
+size_t constexpr kHeapSize     = 1024*512;      // 0.5 MB
 
 size_t constexpr kResWidth = 320;
 size_t constexpr kResHeight = 240;

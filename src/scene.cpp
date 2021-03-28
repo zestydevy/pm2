@@ -13,6 +13,7 @@
 #include "util.hpp"
 #include "math.hpp"
 #include "game.hpp"
+#include "title.hpp"
 
 #include "../scene/object_info.h"
 #include "../models/ovl/sprites/sp_logo1.h"
@@ -116,7 +117,7 @@ void TLogoScene::init()
     mFadeTimer = new TTimer;
 
     // scene start timer
-    mShowTimer->start(2);
+    mShowTimer->start(1);
 
     // move logo off-screen
     mLogoX = 512;
@@ -178,7 +179,7 @@ TScene * TLogoScene::exit()
     delete mLogoSpr;
     delete mLogoNinSpr;
     delete mFadeTimer;
-    return new TLogoScene { "logo", mDynList };
+    return new TTitleScene { "title", mDynList };
 
 }
 
@@ -190,7 +191,7 @@ void TLogoScene::runBootTimer()
         delete mShowTimer;
         mShowTimer = nullptr;
         mLogoX = 0;        // move logo on screen
-        mFadeTimer->start(8);
+        mFadeTimer->start(2);
         //TAudio::playSound(ESfxType::SFX_CAW);
     }
 }
@@ -216,24 +217,24 @@ void TLogoScene::runLogoTimer()
 
 void TLogoScene::runFadeLogo1()
 {
-    const float delayList[5] = {5, 5, 8, 8, 99999};
+    const float delayList[5] = {2, 1.2f, 2, 3, 99999};
     auto game = TGame::getInstance();
 
     if (!mFadeTimer->update()) {
         switch(mLogoState)
         {
             case 0:
-                mAlpha = TMath<s16>::clamp((mAlpha + 2), 0, 255);
+                mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
                 break;
             case 1:
                 game->setClearColor(255,255,255,1);
-                mAlpha = TMath<s16>::clamp((mAlpha - 2), 0, 255);
+                mAlpha = TMath<s16>::clamp((mAlpha - 7), 0, 255);
                 break;
             case 2:
-                mAlpha = TMath<s16>::clamp((mAlpha + 2), 0, 255);
+                mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
                 break;
             case 3:
-                mAlpha = TMath<s16>::clamp((mAlpha - 2), 0, 255);
+                mAlpha = TMath<s16>::clamp((mAlpha - 7), 0, 255);
                 break;
             case 4:
                 mStatus = ESceneState::EXITING;

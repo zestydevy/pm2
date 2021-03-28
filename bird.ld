@@ -82,6 +82,12 @@ SECTIONS
       build/codesegment.o(COMMON);
       build/codesegment.o(.scommon*);
       build/codesegment.o(.bss*);
+      build/obj/sp_logo1.o(.bss*);
+      build/obj/sp_logo2.o(.bss*);
+      build/obj/sp_bg1.o(.bss*);
+      build/obj/sp_bg2.o(.bss*);
+      build/obj/sp_bg3.o(.bss*);
+      build/obj/sp_bg4.o(.bss*);
       . = ALIGN(0x8);
    }
    END_NOLOAD(code)
@@ -89,25 +95,42 @@ SECTIONS
    BEGIN_SEG(logo_ovl, _codeSegmentBssEnd)
    {
       build/obj/sp_logo1.o(.data*);
+      . = ALIGN(2);
       build/obj/sp_logo2.o(.data*);
-      . = ALIGN(0x10);
+      . = ALIGN(2);
    }
    END_SEG(logo_ovl)
    BEGIN_NOLOAD(logo_ovl)
    {
-      build/obj/sp_logo1.o(.bss*);
-      build/obj/sp_logo2.o(.bss*);
+      
    }
    END_NOLOAD(logo_ovl)
+
+   BEGIN_SEG(title_ovl, _codeSegmentBssEnd)
+   {
+      build/obj/sp_bg1.o(.data*);
+      build/obj/sp_bg2.o(.data*);
+      build/obj/sp_bg3.o(.data*);
+      build/obj/sp_bg4.o(.data*);
+      . = ALIGN(0x10);
+   }
+   END_SEG(title_ovl)
+   BEGIN_NOLOAD(title_ovl)
+   {
+      
+   }
+   END_NOLOAD(title_ovl)
    
    BEGIN_SEG(midibank, __romPos)
    {
+      sound/n64st1.wbk.o(.data*);
       . = ALIGN(0x10);
    }
    END_SEG(midibank)
 
    BEGIN_SEG(miditable, __romPos)
    {
+      sound/n64st1.ptr.o(.data*);
       . = ALIGN(0x10);
    }
    END_SEG(miditable)
@@ -120,6 +143,7 @@ SECTIONS
 
    BEGIN_SEG(sfx, __romPos)
    {
+      sound/N64ST1.bfx.o(.data*);
       . = ALIGN(0x10);
    }
    END_SEG(sfx)

@@ -7,6 +7,7 @@
 #include "math.h"
 #include "graphic.h"
 #include "audio.hpp"
+#include "title.hpp"
 
 // -------------------------------------------------------------------------- //
 
@@ -79,7 +80,7 @@ TGame::TGame()
 
 void TGame::init()
 {
-    //TAudio::init();
+    TAudio::init();
 
     // allocate dynamic display list
     mDynList = new TDynList2(2048, nullptr);
@@ -328,10 +329,6 @@ void TGame::testRender(u32 taskNum)
 
     frameState++;
 
-    if (frameState % 2 == 0){
-        return;
-    }
-
     TAudio::update();
 
     switch(scene->getState())
@@ -353,6 +350,8 @@ void TGame::testRender(u32 taskNum)
 
     game->update();
     game->draw();
+
+    nuGfxRetraceWait(2);
 
     if (scene->getName() == "game") {
         //nuGfxRetraceWait(1);

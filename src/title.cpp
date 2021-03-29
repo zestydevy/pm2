@@ -141,8 +141,23 @@ void TTitleScene::scrollCloudLayer()
 
 void TTitleScene::handleStart()
 {
-    if (mStartTimer->update()) {
-        mStartAlpha = TMath<s16>::clamp((mStartAlpha + 8), 0, 255);
+    float const delayTimer[3] = {1, 1, 1};
+    if (!mStartTimer->update()) {
+        switch(mStartState)
+        {
+            case 0:
+                break;
+            case 1:
+                mStartAlpha = TMath<s16>::clamp((mStartAlpha + 8), 0, 255);
+                break;
+            case 2:
+                mStartAlpha = TMath<s16>::clamp((mStartAlpha - 8), 0, 255);
+                break;
+        }
+    } else {
+        mStartTimer->start(delayTimer[mStartState]);
+        ++mStartState;
+        if (mStartState > 2) mStartState = 1;
     }
 }
 

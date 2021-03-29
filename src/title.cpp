@@ -8,6 +8,7 @@
 
 #include "segment.h"
 
+#include "../models/ovl/sprites/sp_bg0.h"
 #include "../models/ovl/sprites/sp_bg1.h"
 #include "../models/ovl/sprites/sp_bg2.h"
 #include "../models/ovl/sprites/sp_bg3.h"
@@ -34,11 +35,15 @@ void TTitleScene::init()
         _title_ovlSegmentRomEnd-_title_ovlSegmentRomStart
     );
 
+    mBgStart = new TSprite;
     mBgLayer1 = new TSprite;
     mBgLayer2 = new TSprite;
     mBgLayer2Dup = new TSprite;
     mBgLayer3 = new TSprite;
     mBgLayer4 = new TSprite;
+
+    mStartTimer = new TTimer;
+    mStartTimer->start(1);
 
     mCloud1X = 360 / 2;
     mCloud2X = -250 * -2;
@@ -50,6 +55,7 @@ void TTitleScene::init()
 void TTitleScene::update()
 {
     scrollCloudLayer();
+    handleStart();
 
     mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
 }
@@ -99,6 +105,13 @@ void TTitleScene::draw2D()
     mBgLayer1->setColor({255,255,255,static_cast<u8>(mAlpha)});
     mBgLayer1->setAttributes(SP_Z | SP_OVERLAP | SP_TRANSPARENT);
     mBgLayer1->draw();
+
+    mBgStart->load(bg0_sprite);
+    mBgStart->setPosition(TVec2S{110, 178});
+    mBgStart->setScale(TVec2F{1.0f, 1.0f});
+    mBgStart->setColor({255,255,255,static_cast<u8>(mStartAlpha)});
+    mBgStart->setAttributes(SP_Z | SP_OVERLAP | SP_TRANSPARENT);
+    mBgStart->draw();
 }
 
 // -------------------------------------------------------------------------- //
@@ -121,6 +134,15 @@ void TTitleScene::scrollCloudLayer()
 
     if (mCloud2X >= 480) {
         mCloud2X = -250;
+    }
+}
+
+// -------------------------------------------------------------------------- //
+
+void TTitleScene::handleStart()
+{
+    if (mStartTimer->update()) {
+        mStartAlpha = TMath<s16>::clamp((mStartAlpha + 8), 0, 255);
     }
 }
 

@@ -33,13 +33,22 @@ class TTitleScene final
     private:
 
     void scrollCloudLayer();
+    void handleStart();
 
+    TSprite * mBgStart{nullptr};
     TSprite * mBgLayer1{nullptr};
     TSprite * mBgLayer2{nullptr};
     TSprite * mBgLayer2Dup{nullptr};
     TSprite * mBgLayer3{nullptr};
     TSprite * mBgLayer4{nullptr};
+    
     s16 mAlpha{0};
+    s16 mStartAlpha{0};
+
+    s32 mStartState{0};
+
+    TTimer * mStartTimer{nullptr};
+    TTimer * mFlashTimer{nullptr};
 
     int mCloud1X{0};
     int mCloud2X{0};

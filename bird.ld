@@ -84,6 +84,7 @@ SECTIONS
       build/codesegment.o(.bss*);
       build/obj/sp_logo1.o(.bss*);
       build/obj/sp_logo2.o(.bss*);
+      build/obj/sp_bg0.o(.bss*);
       build/obj/sp_bg1.o(.bss*);
       build/obj/sp_bg2.o(.bss*);
       build/obj/sp_bg3.o(.bss*);
@@ -108,6 +109,7 @@ SECTIONS
 
    BEGIN_SEG(title_ovl, _codeSegmentBssEnd)
    {
+      build/obj/sp_bg0.o(.data*);
       build/obj/sp_bg1.o(.data*);
       build/obj/sp_bg2.o(.data*);
       build/obj/sp_bg3.o(.data*);

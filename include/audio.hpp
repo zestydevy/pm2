@@ -9,33 +9,14 @@
 
 enum ESfxType : musHandle
 {
-    SFX_BIRD_FLAP            = 0,
-    SFX_BIRD_WALL_HIT        = 1,
-    SFX_BORGAR               = 2,
-    SFX_COUNTDOWN_GO         = 3,
-    SFX_COUNTDOWN_NUMBER     = 4,
-    SFX_CAW                  = 5,
-    SFX_FREEDOM              = 6,
-    BGM_FUNK_COMP_L          = 7,
-    BGM_FUNK_COMP_R          = 8,
-    SFX_GRAB                 = 9,
-    SFX_MENU_BACK            = 10,
-    SFX_MENU_PAGE            = 11,
-    SFX_MENU_SELECT          = 12,
-    SFX_POP                  = 13,
-    SFX_REALEAGLE1           = 14,
-    BGM_SONG_COMP_L          = 15,
-    BGM_SONG_COMP_R          = 16,
-    SFX_TIMEOUT              = 17,
-    SFX_WOOSH                = 18,
-    SFX_STAMP                = 19,
+    SFX_INTRON = 0,
+    SFX_KARASU,
+    SFX_SELECT,
 };
 
 enum EBgm : musHandle
 {
-    BGM_TEST = 0,
-    BGM_FUNK = BGM_FUNK_COMP_L,
-    BGM_FLY = BGM_SONG_COMP_L,
+    BGM_INTRO = 0,
 };
 
 class TAudio

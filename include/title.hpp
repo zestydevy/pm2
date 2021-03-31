@@ -35,6 +35,8 @@ class TTitleScene final
     void scrollCloudLayer();
     void handleStart();
 
+    TPad * mMenuPad{nullptr};
+
     TSprite * mBgStart{nullptr};
     TSprite * mBgLayer1{nullptr};
     TSprite * mBgLayer2{nullptr};
@@ -46,6 +48,7 @@ class TTitleScene final
     s16 mStartAlpha{0};
 
     s32 mStartState{0};
+    bool mCanStart{false};
 
     TTimer * mStartTimer{nullptr};
     TTimer * mFlashTimer{nullptr};

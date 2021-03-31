@@ -5,6 +5,8 @@
 #include "util.hpp"
 #include "game.hpp"
 #include "app.hpp"
+#include "pad.hpp"
+#include "audio.hpp"
 
 #include "segment.h"
 
@@ -35,6 +37,8 @@ void TTitleScene::init()
         _title_ovlSegmentRomEnd-_title_ovlSegmentRomStart
     );
 
+    mMenuPad = new TPad(0);
+    
     mBgStart = new TSprite;
     mBgLayer1 = new TSprite;
     mBgLayer2 = new TSprite;
@@ -48,16 +52,29 @@ void TTitleScene::init()
     mCloud1X = 360 / 2;
     mCloud2X = -250 * -2;
 
+    TAudio::playSound(ESfxType::SFX_INTRON);
+
 }
 
 // -------------------------------------------------------------------------- //
 
 void TTitleScene::update()
 {
+    mMenuPad->read();
+    
     scrollCloudLayer();
     handleStart();
 
     mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
+
+    // can i press start now?
+    if (mCanStart) {
+        if (mMenuPad->isPressed(EButton::START)) {
+            TAudio::stopMusic();
+            // TODO: do crash thing?
+            
+        }
+    }
 }
 
 // -------------------------------------------------------------------------- //
@@ -151,6 +168,7 @@ void TTitleScene::handleStart()
                 mStartAlpha = TMath<s16>::clamp((mStartAlpha + 8), 0, 255);
                 break;
             case 2:
+                mCanStart = true;
                 mStartAlpha = TMath<s16>::clamp((mStartAlpha - 8), 0, 255);
                 break;
         }

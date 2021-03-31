@@ -16,7 +16,7 @@ Gfx setup_rdpstate[] = {
   gsDPSetRenderMode(G_RM_OPA_SURF, G_RM_OPA_SURF2),
   gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
   gsDPSetScissor(G_SC_NON_INTERLACE, 0,0, 320,240),
-  gsDPSetColorDither(G_CD_BAYER),
+  gsDPSetColorDither(G_CD_NOISE),
   gsSPEndDisplayList(),
 };
 

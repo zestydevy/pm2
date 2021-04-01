@@ -89,6 +89,8 @@ SECTIONS
       build/obj/sp_bg2.o(.bss*);
       build/obj/sp_bg3.o(.bss*);
       build/obj/sp_bg4.o(.bss*);
+      build/obj/sp_crash.o(.bss*);
+      build/obj/sp_credits.o(.bss*);
       . = ALIGN(0x8);
    }
    END_NOLOAD(code)
@@ -122,6 +124,19 @@ SECTIONS
       
    }
    END_NOLOAD(title_ovl)
+
+   BEGIN_SEG(crash_ovl, _codeSegmentBssEnd)
+   {
+      build/obj/sp_crash.o(.data*);
+      build/obj/sp_credits.o(.data*);
+      . = ALIGN(0x10);
+   }
+   END_SEG(crash_ovl)
+   BEGIN_NOLOAD(crash_ovl)
+   {
+      
+   }
+   END_NOLOAD(crash_ovl)
    
    BEGIN_SEG(midibank, __romPos)
    {
@@ -149,6 +164,13 @@ SECTIONS
       . = ALIGN(0x10);
    }
    END_SEG(sfx)
+
+   BEGIN_SEG(lol, __romPos)
+   {
+      data/assets.bin.o(.data*);
+      . = ALIGN(0x10);
+   }
+   END_SEG(lol)
 
    /* Discard everything not specifically mentioned above. */
    /DISCARD/ :

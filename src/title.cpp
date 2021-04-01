@@ -2,6 +2,7 @@
 
 #include "title.hpp"
 #include "scene.hpp"
+#include "credits.hpp"
 #include "util.hpp"
 #include "game.hpp"
 #include "app.hpp"
@@ -17,6 +18,13 @@
 #include "../models/ovl/sprites/sp_bg4.h"
 
 extern "C" void bzero(void *, int);
+
+static TTimer * sCrashTimer{nullptr};
+static TTimer * sScrollTimer{nullptr};
+static TTimer * sExitTimer{nullptr};
+static bool sIsCredits{false};
+static bool sIsLoop{false};
+static EButton const sButtonCache[] = {UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT, RIGHT, B, A};
 
 // -------------------------------------------------------------------------- //
 
@@ -47,12 +55,17 @@ void TTitleScene::init()
     mBgLayer4 = new TSprite;
 
     mStartTimer = new TTimer;
+    sCrashTimer = new TTimer;
+    sScrollTimer = new TTimer;
+    sExitTimer = new TTimer;
     mStartTimer->start(1);
+    sExitTimer->start(110.0F);
 
     mCloud1X = 360 / 2;
     mCloud2X = -250 * -2;
 
-    TAudio::playSound(ESfxType::SFX_INTRON);
+    TAudio::playMusicMono(EBgm::BGM_INTRO);
+    TAudio::fadeMusic(1.0F);
 
 }
 
@@ -64,17 +77,24 @@ void TTitleScene::update()
     
     scrollCloudLayer();
     handleStart();
-
-    mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
+    waitForEnd();
 
     // can i press start now?
     if (mCanStart) {
+        handleCheat();
         if (mMenuPad->isPressed(EButton::START)) {
-            TAudio::stopMusic();
-            // TODO: do crash thing?
             
+            TAudio::fadeMusic(0.0f, 4.0f);
+            auto handle = MusStartEffect(ESfxType::SFX_SELECT);
+            MusHandleSetVolume(handle, 50);
+
+            mStartState = 3;
+            mStartAlpha = 0;
+            mCanStart = false;
         }
     }
+
+    TAudio::update();
 }
 
 // -------------------------------------------------------------------------- //
@@ -88,6 +108,8 @@ void TTitleScene::draw()
 
 void TTitleScene::draw2D()
 {   
+    if (mStartState >= 4) return;
+    
     mBgLayer4->load(bg4_sprite);
     mBgLayer4->setPosition(TVec2S{0, 123});
     mBgLayer4->setScale(TVec2F{1.0f, 1.0f});
@@ -135,15 +157,29 @@ void TTitleScene::draw2D()
 
 TScene * TTitleScene::exit()
 {
-    return new TTitleScene { "title", mDynList };
+    delete sCrashTimer;
+    delete sScrollTimer;
+    delete sExitTimer;
+
+    if (sIsLoop) {
+        sIsLoop = false;
+        sIsCredits = false;
+        return new TLogoScene { nullptr, mDynList };
+    } else {
+        return new TCreditsScene { "credits", mDynList, sIsCredits };
+    }
 }
 
 // -------------------------------------------------------------------------- //
 
 void TTitleScene::scrollCloudLayer()
 {
-    ++mCloud1X;
-    ++mCloud2X;
+    if (!sScrollTimer->update()) {
+        ++mCloud1X;
+        ++mCloud2X;
+    } else {
+        sScrollTimer->start(0.04F);
+    }
 
     if (mCloud1X >= 480) {
         mCloud1X = -250;
@@ -159,23 +195,86 @@ void TTitleScene::scrollCloudLayer()
 void TTitleScene::handleStart()
 {
     float const delayTimer[3] = {1, 1, 1};
+    auto game = TGame::getInstance();
+
     if (!mStartTimer->update()) {
         switch(mStartState)
         {
             case 0:
+                mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
                 break;
             case 1:
+                mAlpha = TMath<s16>::clamp((mAlpha + 7), 0, 255);
                 mStartAlpha = TMath<s16>::clamp((mStartAlpha + 8), 0, 255);
                 break;
             case 2:
                 mCanStart = true;
                 mStartAlpha = TMath<s16>::clamp((mStartAlpha - 8), 0, 255);
                 break;
+            case 3:
+                mStartTimer->start(99.0f);
+                //game->setClearColor(0,0,0,255);
+                mAlpha = TMath<s16>::clamp((mAlpha - 4), 0, 255);
+                if (mAlpha == 0) mStartState = 4;
+                break;
+            case 4:
+                mAlpha = TMath<s16>::clamp((mAlpha + 6), 0, 255);
+                game->setClearColor(-mAlpha,-mAlpha,-mAlpha,255);
+                sCrashTimer->start(4);
+                mStartState = 5;
+                break;
+            case 5:
+                game->setClearColor(-mAlpha,-mAlpha,-mAlpha,255); 
+                mAlpha = TMath<s16>::clamp((mAlpha + 6), 0, 255);
+                if (sCrashTimer->update()) {
+                    mStatus = ESceneState::EXITING;
+                }
+                break;
         }
     } else {
         mStartTimer->start(delayTimer[mStartState]);
         ++mStartState;
         if (mStartState > 2) mStartState = 1;
+    }
+}
+
+// -------------------------------------------------------------------------- //
+
+void TTitleScene::handleCheat()
+{
+    if (mMenuPad->isPressed(sButtonCache[mCheatState])){
+        mCheatState++;
+
+        if (mCheatState == sizeof(sButtonCache) / sizeof(EButton)){
+            sIsCredits = true;
+            
+            TAudio::fadeMusic(0.0f, 8.0f);
+            TAudio::playSound(ESfxType::SFX_SELECT);
+
+            mStartState = 3;
+            mStartAlpha = 0;
+            mCanStart = false;
+        }
+    }
+    else if (mMenuPad->isPressed((EButton)(A | B | UP | LEFT | RIGHT | DOWN)))
+        mCheatState = 0;
+}
+
+// -------------------------------------------------------------------------- //
+
+void TTitleScene::waitForEnd()
+{
+    if (sExitTimer->update()) {
+        mCanStart = false;
+        if (!sIsLoop) {
+            sIsLoop = true;
+            mStartState = 2;
+            mStartTimer->start(2);
+        }
+    }
+
+    if (sIsLoop && mStartTimer->update()) {
+        mStatus = ESceneState::EXITING;
     }
 }
 

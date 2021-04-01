@@ -122,6 +122,12 @@ void TAudio::playMusic(EBgm const music)
     setVolume();
 }
 
+void TAudio::playMusicMono(EBgm const music)
+{
+    mBgmL = MusStartEffect(music);
+    setVolume();
+}
+
 // -------------------------------------------------------------------------- //
 
 void TAudio::fadeMusic(float to, float time) {
@@ -140,7 +146,7 @@ void TAudio::fadeMusic(float to, float time) {
 void TAudio::stopMusic()
 {
     MusHandleStop(mBgmL, 0);
-    MusHandleStop(mBgmR, 0);
+    //MusHandleStop(mBgmR, 0);
 }
 
 // -------------------------------------------------------------------------- //
@@ -149,7 +155,12 @@ void TAudio::setVolume() {
     int volume = (int)(sBgmCurVol * 0.5F * 128.0F);
 
     MusHandleSetVolume(mBgmL, volume);
-    MusHandleSetVolume(mBgmR, volume);
+    //MusHandleSetVolume(mBgmR, volume);
 }
 
 // -------------------------------------------------------------------------- //
+
+bool TAudio::isPlaying()
+{
+    return MusAsk(MUSFLAG_EFFECTS);
+}

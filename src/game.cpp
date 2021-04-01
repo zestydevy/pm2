@@ -159,16 +159,7 @@ void TGame::update()
     
     nuGfxTaskStart(mDynList->getHead(),
         (s32)(mDynList->fetchCmdIndex()) * sizeof (Gfx),
-	    NU_GFX_UCODE_F3DEX, NU_SC_NOSWAPBUFFER);
-
-
-    char conbuff[64];
-    nuDebConTextColor(0, NU_DEB_CON_TEXT_RED);
-    nuDebConTextPos(0,3,3);
-    sprintf(conbuff,"%x", THeap::getCurrentHeap()->getUsedSize());
-    nuDebConCPuts(0, conbuff);
-    
-    nuDebConDisp(NU_SC_SWAPBUFFER);
+	    NU_GFX_UCODE_F3DEX, NU_SC_SWAPBUFFER);
 
     mDynList->flip();
 }
@@ -329,8 +320,6 @@ void TGame::testRender(u32 taskNum)
 
     frameState++;
 
-    TAudio::update();
-
     switch(scene->getState())
     {
         case ESceneState::IDLE:
@@ -352,12 +341,6 @@ void TGame::testRender(u32 taskNum)
     game->draw();
 
     nuGfxRetraceWait(2);
-
-    if (scene->getName() == "game") {
-        //nuGfxRetraceWait(1);
-    } else {
-       // nuGfxRetraceWait(2);
-    }
 }
 
 // -------------------------------------------------------------------------- //

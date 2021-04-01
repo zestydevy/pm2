@@ -134,7 +134,7 @@ void CApp::appError(void * arg)
 
             // Print the basic info
             char str[128];
-            sprintf(str, "something fucked up!!!! Fault in thread: %d", curr->id);
+            sprintf(str, "ULTRA 64 ERROR: %d", curr->id);
             debug_draw_string(buffer, 5, 5, str);
 
             sprintf(str, "pc    | %08x", (u32)context->pc);

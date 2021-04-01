@@ -29,8 +29,13 @@ class TAudio
     static void playSound(ESfxType sound);
 
     static void playMusic(EBgm music);
+    static void playMusicMono(EBgm music);
     static void fadeMusic(float to, float time = 0.0F);
     static void stopMusic();
+
+    static musHandle & getBgmHandle() {return mBgmL;}
+    
+    static bool isPlaying();
 
     private:
 

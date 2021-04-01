@@ -130,7 +130,7 @@ $(TARGETS) $(APP): $(CP_LD_SCRIPT) $(OBJECTS)
 	@echo "\e[35mLinking ROM $<...\e[0m"
 	@$(LD) -L. -T $(CP_LD_SCRIPT) -Map $(MAP) -o $(ELF) 
 	@echo "\e[35mConverting ROM $<...\e[0m"
-	@$(OBJCOPY) --pad-to=0xC00000 --gap-fill=0xFF $(ELF) $(TARGETS) -O binary
+	@$(OBJCOPY) --pad-to=0x2000000 --gap-fill=0xFF $(ELF) $(TARGETS) -O binary
 	@makemask $(TARGETS)
 	@echo "\e[32mDone! ./build/$(PROJECT).z64\e[0m"
 

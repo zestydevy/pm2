@@ -34,6 +34,8 @@ class TTitleScene final
 
     void scrollCloudLayer();
     void handleStart();
+    void handleCheat();
+    void waitForEnd();
 
     TPad * mMenuPad{nullptr};
 
@@ -55,5 +57,7 @@ class TTitleScene final
 
     int mCloud1X{0};
     int mCloud2X{0};
+
+    int mCheatState{0};
 
 };

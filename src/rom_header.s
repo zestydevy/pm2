@@ -8,16 +8,16 @@
 .word  entry_point              /* Entrypoint */
 
 /* SDK Revision */
-.word  0x0000144C
+.word  0x0000144B
 
 .word  0x00000000               /* Checksum 1 (OVERWRITTEN BY MAKEMASK)*/
 .word  0x00000000               /* Checksum 2 (OVERWRITTEN BY MAKEMASK)*/
 .word  0x00000000               /* Unknown */
 .word  0x00000000               /* Unknown */
-.ascii "                    "   /* Internal ROM name (Max 20 characters) */
+.ascii "SUPER MARIO RPG 2   "   /* Internal ROM name (Max 20 characters) */
 .word  0x00000000               /* Unknown */
 /* Game ID (EXAMPLE: NSME) Begins here */
 .word  0x0000004E                /* Cartridge Type (N)*/
-.ascii "  "                     /* Cartridge ID (SM)*/
-.ascii " "			/* Region (E)*/
+.ascii "MQ"                     /* Cartridge ID (SM)*/
+.ascii "E"			/* Region (E)*/
 .byte  0x00			/* Version */
